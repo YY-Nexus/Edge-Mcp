@@ -1,0 +1,44 @@
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+certificatesResolvers:
+  leresolver:
+    acme:
+      email: your@email.com
+      storage: /acme.json
+      httpChallenge:
+        entryPoint: web
+
+providers:
+  docker:
+    exposedByDefault: false
+
+api:
+  image: yanyuit/mcp-api:latest
+  labels:
+    - "traefik.enable=true"
+    - "traefik.http.routers.api.rule=Host(`api.yourdomain.com`)"
+    - "traefik.http.routers.api.entrypoints=websecure"
+    - "traefik.http.routers.api.tls.certresolver=leresolver"
+    - "traefik.http.services.api.loadbalancer.server.port=8080"
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+certificatesResolvers:
+  leresolver:
+    acme:
+      email: your@email.com
+      storage: /acme.json
+      httpChallenge:
+        entryPoint: web
+
+providers:
+  docker:
+    exposedByDefault: false
