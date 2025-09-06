@@ -1,0 +1,9 @@
+<script>
+const token = localStorage.getItem('jwt-token');
+if (token) {
+  const role = JSON.parse(atob(token.split('.')[1])).role;
+  if (location.pathname.includes('/modules/dashboard') && role !== 'instructor' && role !== 'admin') {
+    location.href = '/zh-cn/student-home.md';
+  }
+}
+</script>
