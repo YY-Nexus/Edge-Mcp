@@ -1,0 +1,35 @@
+### 获取 JWT Token（假设有 /api/login）
+POST http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+  "username": "teacher",
+  "password": "123456"
+}
+
+### 提交单份报告（需替换 {{token}}）
+POST http://localhost:3000/api/report
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "avg": "4.8",
+  "high": "结构清晰、目标明确",
+  "low": "表达模糊",
+  "advice": "添加上下文说明;引导 AI 举例说明",
+  "comments": ["很有帮助", "建议增加案例"]
+}
+
+### 批量上传报告
+POST http://localhost:3000/api/report/batch
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+[
+  { "avg": "4.5", "high": "表达准确", "low": "缺乏互动", "advice": "增加互动", "comments": ["内容具体"] },
+  { "avg": "3.9", "high": "结构清晰", "low": "缺乏上下文", "advice": "补充背景", "comments": ["希望有更多说明"] }
+]
+
+### 查询所有报告
+GET http://localhost:3000/api/report
+Authorization: Bearer {{token}}

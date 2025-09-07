@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>教学反馈报告 · Mcp-Edge</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      max-width: 800px;
+      margin: auto;
+      padding: 40px;
+      background: #f9f9f9;
+    }
+    h1, h2 {
+      color: #2c3e50;
+    }
+    .lang-switch {
+      text-align: right;
+      margin-bottom: 20px;
+    }
+    .lang-switch button {
+      margin-left: 10px;
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+    .section {
+      margin-top: 40px;
+    }
+    canvas {
+      margin-top: 20px;
+    }
+    .comment-box {
+      background: #eef;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+    #en {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div style="margin-bottom:24px;">
+    <blockquote class="brand-quote-cn">
+      万象归元于云枢丨深栈启智新纪元
+    </blockquote>
+    <blockquote class="brand-quote-en">
+      All Realms Converge at Cloud Nexus, DeepStack Ignites a New Era
+    </blockquote>
+  </div>
+  <div class="lang-switch">
+    <button onclick="switchLang('zh')">中文</button>
+    <button onclick="switchLang('en')">English</button>
+  </div>
+
+
+  <div id="zh">
+    <h1>📊 教学反馈报告</h1>
+    <div class="section">
+      <h2>评分分布图</h2>
+      <canvas id="chartZh" width="600" height="300"></canvas>
+    </div>
+    <div class="section">
+      <h2>学生评论摘要</h2>
+      <div id="commentsZh"></div>
+    </div>
+    <div class="section">
+      <h2>教学总结</h2>
+      <ul>
+        <li>平均评分为 <strong>4.2 星</strong></li>
+        <li>高评分提示词：结构清晰、目标明确</li>
+        <li>低评分提示词：模糊、缺乏上下文</li>
+      </ul>
+    </div>
+    <div class="section">
+      <h2>优化建议</h2>
+      <ul>
+        <li>添加上下文说明</li>
+        <li>使用分点提问</li>
+        <li>引导 AI 举例说明</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="en">
+    <h1>📊 Teaching Feedback Report</h1>
+    <div class="section">
+      <h2>Score Distribution</h2>
+      <canvas id="chartEn" width="600" height="300"></canvas>
+    </div>
+    <div class="section">
+      <h2>Student Comments</h2>
+      <div id="commentsEn"></div>
+    </div>
+    <div class="section">
+      <h2>Teaching Summary</h2>
+      <ul>
+        <li>Average score: <strong>4.2 stars</strong></li>
+        <li>High-rated prompts: clear structure, specific goals</li>
+        <li>Low-rated prompts: vague, lacking context</li>
+      </ul>
+    </div>
+    <div class="section">
+      <h2>Optimization Suggestions</h2>
+      <ul>
+        <li>Add contextual background</li>
+        <li>Use bullet-point questions</li>
+        <li>Encourage AI to give examples</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    function switchLang(lang) {
+      document.getElementById('zh').style.display = lang === 'zh' ? 'block' : 'none';
+      document.getElementById('en').style.display = lang === 'en' ? 'block' : 'none';
+    }
+
+    fetch('/api/feedback')
+      .then(res => res.json())
+      .then(data => {
+        const ratings = data.map(f => f.rating);
+        const comments = data.map(f => f.comment).filter(c => c);
+        const counts = [1,2,3,4,5].map(n => ratings.filter(r => r == n).length);
+        new Chart(document.getElementById('chartZh'), {
+          type: 'bar',
+          data: {
+            labels: ['1星', '2星', '3星', '4星', '5星'],
+            datasets: [{
+              label: '评分分布',
+              data: counts,
+              backgroundColor: '#42b983'
+            }]
+          }
+        });
+        new Chart(document.getElementById('chartEn'), {
+          type: 'bar',
+          data: {
+            labels: ['1★', '2★', '3★', '4★', '5★'],
+            datasets: [{
+              label: 'Score Distribution',
+              data: counts,
+              backgroundColor: '#42b983'
+            }]
+          }
+        });
+        const zhBox = document.getElementById('commentsZh');
+        const enBox = document.getElementById('commentsEn');
+        comments.forEach(c => {
+          const div = document.createElement('div');
+          div.className = 'comment-box';
+          div.textContent = c;
+          zhBox.appendChild(div.cloneNode(true));
+          enBox.appendChild(div.cloneNode(true));
+        });
+      });
+  </script>
+</body>
+</html>

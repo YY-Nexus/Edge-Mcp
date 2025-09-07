@@ -1,0 +1,5 @@
+[
+  {"user_id":1,"prompt":"优化表达方式","rating":5,"comment":"很有帮助！","created_at":"2025-09-01T10:00:00Z"},
+  {"user_id":2,"prompt":"结构化提示词","rating":4,"comment":"案例很实用。","created_at":"2025-09-02T11:00:00Z"},
+  {"user_id":3,"prompt":"创新思路","rating":3,"comment":"希望更多讲解。","created_at":"2025-09-03T12:00:00Z"}
+]

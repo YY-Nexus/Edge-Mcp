@@ -1,0 +1,50 @@
+version: '3.8'
+services:
+  app:
+    image: node:20-alpine
+    container_name: mcp-edge-app
+    working_dir: /app
+    volumes:
+      - ./mcp-ai-chat-eval/backend:/app
+      - ./mcp-ai-chat-eval/backend/.env:/app/.env:ro
+    command: sh -c "npm install && node app.js"
+    environment:
+      - NODE_ENV=production
+      - TZ=Asia/Shanghai
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: mariadb:11
+    container_name: mcp-edge-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS:-mcp123456}
+      - MYSQL_DATABASE=${DB_NAME:-mcp_edge}
+      - MYSQL_USER=${DB_USER:-mcpuser}
+      - MYSQL_PASSWORD=${DB_PASS:-mcppass}
+      - TZ=Asia/Shanghai
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: mcp-edge-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+      - ./docs:/usr/share/nginx/html:ro
+    depends_on:
+      - app
+    restart: unless-stopped
+
+volumes:
+  db_data:

@@ -1,0 +1,101 @@
+<!-- Mcp-Edge 教学平台欢迎动画 -->
+<div class="welcome-banner">
+  <h1 class="fade-in">🎓 欢迎来到 Mcp-Edge 教学平台</h1>
+  <p class="fade-in delay">技术即教育 · 部署即传承 · 厚德育人</p>
+</div>
+
+<style>
+.welcome-banner {
+  text-align: center;
+  padding: 80px 20px;
+  background: linear-gradient(to right, #42b983, #2c3e50);
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+}
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 2s ease-in forwards;
+}
+.fade-in.delay {
+  animation-delay: 1s;
+}
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+</style>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mcp-Edge 教学资源</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify/themes/vue.css" />
+</head>
+<body>
+  <div class="welcome-banner">
+    <h1 class="fade-in">🎓 欢迎来到 Mcp-Edge 教学平台</h1>
+    <p class="fade-in delay">技术即教育 · 部署即传承 · 厚德育人</p>
+  </div>
+  <style>
+    .welcome-banner {
+      text-align: center;
+      padding: 80px 20px;
+      background: linear-gradient(to right, #42b983, #2c3e50);
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 2s ease-in forwards;
+    }
+    .fade-in.delay {
+      animation-delay: 1s;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+  </style>
+  <div id="app">加载中...</div>
+  <div id="ai-chat">
+    <input id="prompt" placeholder="输入你的问题..." />
+    <button onclick="sendPrompt()">发送</button>
+    <div id="ai-reply"></div>
+  </div>
+
+  <script>
+    window.$docsify = {
+      name: 'Mcp-Edge 教学资源',
+      repo: 'YY-Nexus/Mcp-Edge',
+      loadNavbar: true,
+      loadSidebar: true,
+      subMaxLevel: 2,
+      alias: {
+        '/zh-cn/(.*)': '/zh-cn/$1',
+        '/en/(.*)': '/en/$1'
+      },
+      fallbackLanguages: ['zh-cn', 'en'],
+      themeColor: '#42b983'
+    };
+
+    async function sendPrompt() {
+      const prompt = document.getElementById('prompt').value;
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({prompt})
+      });
+      const data = await res.json();
+      document.getElementById('ai-reply').innerText = data.reply;
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
+  <script src="https://utteranc.es/client.js"
+        repo="YY-Nexus/Mcp-Edge"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+  </script>
+</body>
+</html>

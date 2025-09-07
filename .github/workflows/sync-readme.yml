@@ -1,0 +1,23 @@
+name: Sync README Translation
+
+on:
+  push:
+    paths:
+      - 'docs/zh-cn/README.md'
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Translate README
+        run: |
+          pip install openai
+          python scripts/translate_readme.py
+      - name: Commit changes
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'actions@github.com'
+          git add docs/en/README.md
+          git commit -m 'auto: sync en/README.md from zh-cn/README.md' || echo 'No changes'
+          git push

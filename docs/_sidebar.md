@@ -1,0 +1,4 @@
+- 教学首页 / Home: index.html
+- 评分标准 / Prompt Scoring: zh-cn/prompt-scoring.md
+- 练习与自评 / Exercises: exercises-prompts.md
+- 教学反馈 / Reports: lesson-plan-eval.md

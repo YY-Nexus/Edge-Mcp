@@ -6,7 +6,10 @@
   "scripts": {
     "start": "node server.js",
     "test": "echo \"No tests yet\" && exit 0",
-    "install:all": "npm install"
+    "install:all": "npm install",
+    "build": "next build",
+    "export": "next export",
+    "zip-docs": "zip -r mcp-edge-docsify-modules.zip docs/ docsify.json"
   },
   "dependencies": {
     "mysql2": "^3.9.7",

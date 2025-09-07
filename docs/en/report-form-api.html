@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Teaching Feedback Report Generator (API)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 40px auto; background: #f9f9f9; padding: 24px; }
+    h1 { color: #2c3e50; }
+    label { display: block; margin-top: 16px; }
+    textarea, input { width: 100%; padding: 8px; margin-top: 4px; border-radius: 4px; border: 1px solid #ccc; }
+    button { margin-top: 24px; padding: 10px 24px; background: #42b983; color: #fff; border: none; border-radius: 6px; font-size: 1.1em; cursor: pointer; }
+    .result { background: #eef; margin-top: 32px; padding: 16px; border-radius: 8px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>📊 Teaching Feedback Report Generator (API)</h1>
+  <form id="reportForm">
+    <label>Average Score <input name="avg" type="text" required></label>
+    <label>High-rated Prompts <input name="high" type="text" placeholder="Clear structure, specific goals"></label>
+    <label>Low-rated Prompts <input name="low" type="text" placeholder="Vague, lacking context"></label>
+    <label>Optimization Suggestions <input name="advice" type="text" placeholder="Add contextual background;Use bullet-point questions;Encourage AI to give examples"></label>
+    <label>Student Comments (one per line)<textarea name="comments" rows="4"></textarea></label>
+    <button type="submit">Generate & Submit Report</button>
+  </form>
+  <div class="result" id="result"></div>
+  <script>
+    document.getElementById('reportForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const f = e.target;
+      const comments = f.comments.value.split('\n').filter(Boolean);
+      const data = {
+        avg: f.avg.value,
+        high: f.high.value,
+        low: f.low.value,
+        advice: f.advice.value,
+        comments
+      };
+      // Markdown
+      const adviceMd = data.advice.split(';').map(a => `- ${a}`).join('\n');
+      const commentsMd = data.comments.map(c => `> ${c}`).join('\n');
+      const md = `# 📊 Teaching Feedback Report\n\n> All Realms Converge at Cloud Nexus, DeepStack Ignites a New Era\n\n## Score Distribution\n\n\n## Student Comments\n\n${commentsMd}\n\n## Teaching Summary\n\n- Average score: ${data.avg}\n- High-rated prompts: ${data.high}\n- Low-rated prompts: ${data.low}\n\n## Optimization Suggestions\n\n${adviceMd}\n\n> All Realms Converge at Cloud Nexus, DeepStack Ignites a New Era\n`;
+      document.getElementById('result').textContent = md;
+      // API submit
+      try {
+        const res = await fetch('/api/report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (res.ok) {
+          alert('Report submitted to backend!');
+        } else {
+          alert('Submission failed, check backend API.');
+        }
+      } catch (err) {
+        alert('Network error, cannot submit.');
+      }
+    };
+  </script>
+</body>
+</html>

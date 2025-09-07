@@ -1,0 +1,35 @@
+name: MCP Auth CI/CD
+on:
+  push:
+    paths:
+      - 'mcp-auth/**'
+      - 'docker-compose.yaml'
+      - '.github/workflows/mcp-auth-ci.yml'
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./mcp-auth
+          push: true
+          tags: yanyuit/mcp-auth:latest
+      - name: Deploy with Portainer
+        uses: portainer/portainer-action@v1
+        with:
+          endpoint: ${{ secrets.PORTAINER_ENDPOINT }}
+          username: ${{ secrets.PORTAINER_USERNAME }}
+          password: ${{ secrets.PORTAINER_PASSWORD }}
+          stack: mcp-edge
+          compose: docker-compose.yaml

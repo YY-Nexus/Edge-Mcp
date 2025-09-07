@@ -1,0 +1,33 @@
+// scripts/ci-cd-docsify.yml
+name: Docsify Deploy
+on:
+  push:
+    paths:
+      - 'docs/**'
+      - 'docsify.json'
+      - '.github/workflows/ci-cd-docsify.yml'
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - name: Install dependencies
+        run: npm install -g docsify-cli
+      - name: Build Docsify
+        run: docsify init ./docs || true
+      - name: Archive docs
+        run: zip -r docsify-site.zip docs/
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docsify-site
+          path: docsify-site.zip
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs

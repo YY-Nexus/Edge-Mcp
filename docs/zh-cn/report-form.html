@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>教学反馈报告自动生成表单</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 40px auto; background: #f9f9f9; padding: 24px; }
+    h1 { color: #2c3e50; }
+    label { display: block; margin-top: 16px; }
+    textarea, input { width: 100%; padding: 8px; margin-top: 4px; border-radius: 4px; border: 1px solid #ccc; }
+    button { margin-top: 24px; padding: 10px 24px; background: #42b983; color: #fff; border: none; border-radius: 6px; font-size: 1.1em; cursor: pointer; }
+    .result { background: #eef; margin-top: 32px; padding: 16px; border-radius: 8px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>📊 教学反馈报告自动生成</h1>
+  <form id="reportForm">
+    <label>平均评分 <input name="avg" type="text" required></label>
+    <label>高评分提示词 <input name="high" type="text" placeholder="结构清晰、目标明确"></label>
+    <label>低评分提示词 <input name="low" type="text" placeholder="模糊、缺乏上下文"></label>
+    <label>优化建议 <input name="advice" type="text" placeholder="添加上下文说明;使用分点提问;引导 AI 举例说明"></label>
+    <label>学生评论（每行一条）<textarea name="comments" rows="4"></textarea></label>
+    <button type="submit">生成报告</button>
+  </form>
+  <div class="result" id="result"></div>
+  <script>
+    document.getElementById('reportForm').onsubmit = function(e) {
+      e.preventDefault();
+      const f = e.target;
+      const comments = f.comments.value.split('\n').filter(Boolean).map(c => `> ${c}`).join('\n');
+      const advice = f.advice.value.split(';').map(a => `- ${a}`).join('\n');
+      const md = `# 📊 教学反馈报告\n\n> 万象归元于云枢丨深栈启智新纪元\n\n## 评分分布\n\n\n## 学生评论摘要\n\n${comments}\n\n## 教学总结\n\n- 平均评分：${f.avg.value}\n- 高评分提示词：${f.high.value}\n- 低评分提示词：${f.low.value}\n\n## 优化建议\n\n${advice}\n\n> 万象归元于云枢丨深栈启智新纪元\n`;
+      document.getElementById('result').textContent = md;
+    };
+  </script>
+</body>
+</html>

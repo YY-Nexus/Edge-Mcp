@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 教学助手 · Chat 演示</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      padding: 40px;
+      max-width: 800px;
+      margin: auto;
+    }
+    .banner-ani {
+      text-align: center;
+      margin-bottom: 30px;
+      animation: fadeIn 2s;
+    }
+    h1 {
+      color: #42b983;
+      font-size: 2.2em;
+      margin-bottom: 0.2em;
+    }
+    .subtitle {
+      color: #2c3e50;
+      font-size: 1.1em;
+      margin-bottom: 1.5em;
+      opacity: 0.8;
+      animation: fadeIn 2s 0.5s forwards;
+    }
+    textarea {
+      width: 100%;
+      height: 120px;
+      font-size: 16px;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: 1px solid #bbb;
+      box-sizing: border-box;
+      resize: vertical;
+    }
+    button {
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #42b983, #2c3e50);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #2c3e50, #42b983);
+    }
+    iframe {
+      width: 100%;
+      height: 200px;
+      border: 1px solid #ccc;
+      margin-top: 20px;
+      background: white;
+      border-radius: 6px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="banner-ani">
+    <h1 id="title">🤖 AI 教学助手</h1>
+    <div class="subtitle" id="subtitle">请输入提示词，点击发送，查看 AI 回复：</div>
+  </div>
+  <textarea id="prompt" placeholder="例如：请解释什么是微服务架构..."></textarea>
+  <button onclick="sendPrompt()" id="sendBtn">发送</button>
+  <iframe id="responseFrame" title="AI 回复展示"></iframe>
+
+  <script>
+    // 多语言切换
+    const lang = navigator.language.startsWith('en') ? 'en' : 'zh';
+    if (lang === 'en') {
+      document.getElementById('title').innerText = '🤖 AI Teaching Assistant';
+      document.getElementById('subtitle').innerText = 'Enter your prompt, click Send, and view the AI response:';
+      document.getElementById('prompt').placeholder = 'e.g. Explain what is microservices architecture...';
+      document.getElementById('sendBtn').innerText = 'Send';
+    }
+
+    async function sendPrompt() {
+      const prompt = document.getElementById('prompt').value;
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt })
+      });
+      const data = await res.json();
+      const reply = data.reply || (lang === 'en' ? 'No response received' : '未收到回复');
+      document.getElementById('responseFrame').srcdoc = `<div style='padding:20px;font-size:16px;'>${reply}</div>`;
+    }
+  </script>
+</body>
+</html>

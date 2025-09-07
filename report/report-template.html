@@ -1,0 +1,52 @@
+# 教学报告模板 · Report Template
+
+> 本页面用于教学报告 PDF 生成，支持评分分布图、评论摘要与中英双语切换。
+
+---
+
+## 评分分布图
+
+<canvas id="ratingChart" width="600" height="300"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+fetch('/report/feedback.json')
+  .then(res => res.json())
+  .then(data => {
+    const ctx = document.getElementById('ratingChart').getContext('2d');
+    const ratings = [5,4,3,2,1].map(r => data.filter(f => f.rating === r).length);
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['5星','4星','3星','2星','1星'],
+        datasets: [{ label: '人数', data: ratings, backgroundColor: '#1A5FB4' }]
+      }
+    });
+  });
+</script>
+
+---
+
+## 评论摘要
+
+<div id="comments"></div>
+<script>
+fetch('/report/feedback.json')
+  .then(res => res.json())
+  .then(data => {
+    const comments = data.map(f => `<li>${f.comment}</li>`).join('');
+    document.getElementById('comments').innerHTML = `<ul>${comments}</ul>`;
+  });
+</script>
+
+---
+
+## 教学总结与优化建议
+
+- 优化提示词设计，提升表达能力
+- 增加案例讲解与自动评分工具
+
+---
+
+## 语言切换
+
+<a href="/docs/zh-cn/modules/report-template.md">中文</a> | <a href="/docs/en/modules/report-template.md">English</a>
